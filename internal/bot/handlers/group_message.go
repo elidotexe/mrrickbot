@@ -8,11 +8,12 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-// OnGroupMessage which handles group messages received by the Telegram bot. The function first 
-// checks if the user sending the message is an admin or not. If the user is not an admin and 
-// the message contains certain keywords related to drugs, the function deletes the message 
+// OnGroupMessage which handles group messages received by the Telegram bot. The function first
+// checks if the user sending the message is an admin or not. If the user is not an admin and
+// the message contains certain keywords related to drugs, the function deletes the message
 // and sends an anti-spam message in response.
 func (h *Handlers) OnGroupMessage(ctx *tgbotapi.Message) {
+	h.logger.Infof("Received message from %s in group %s", ctx.From.UserName, ctx.Chat.Title)
 	chatID := ctx.Chat.ID
 
 	admins, _ := h.getChatAdmins(ctx)
@@ -28,6 +29,7 @@ func (h *Handlers) OnGroupMessage(ctx *tgbotapi.Message) {
 	pattern := regexp.MustCompile(`(?i)\b(cocaine|pills|meth|ecstasy|plugs|pingers|k|shrooms|mushrooms|dealer|dealers|f2f|deliveries|2cb|lsd|weed|md|mdma|xans|xanax|bud|ketamine|speed|adderall|acid|coke|hash|ket|tabs|dmt|xtc)\b`)
 
 	if !userIsAdmin && pattern.MatchString(ctx.Text) {
+		h.logger.Infof("Deleting spam message from %s in group %s", ctx.From.UserName, ctx.Chat.Title)
 		deleteMsg := tgbotapi.NewDeleteMessage(chatID, ctx.MessageID)
 
 		_, err := h.bot.Request(deleteMsg)
@@ -44,7 +46,7 @@ func (h *Handlers) OnGroupMessage(ctx *tgbotapi.Message) {
 			return
 		}
 
-	  go h.DeleteMessage(chatID, sentMsg.MessageID)
+		go h.DeleteMessage(chatID, sentMsg.MessageID)
 	}
 }
 
