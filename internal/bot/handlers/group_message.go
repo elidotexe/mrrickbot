@@ -16,6 +16,10 @@ func (h *Handlers) OnGroupMessage(ctx *tgbotapi.Message) {
 	h.logger.Infof("Received message from %s in group %s", ctx.From.UserName, ctx.Chat.Title)
 	chatID := ctx.Chat.ID
 
+	if chatID == -1001785430477 {
+		return
+	}
+
 	admins, _ := h.getChatAdmins(ctx)
 
 	userIsAdmin := false

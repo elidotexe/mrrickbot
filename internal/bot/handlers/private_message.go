@@ -17,13 +17,13 @@ func (h *Handlers) OnPrivateMessage(ctx *tgbotapi.Message) {
 	sendMsg := tgbotapi.NewMessage(ctx.Chat.ID, "Hey, "+ctx.From.UserName+", "+msgText+" "+ctx.From.UserName+"?")
 	sendMsg.ReplyToMessageID = ctx.MessageID
 
-  go h.sendPrivateMessage(sendMsg)
+	go h.sendPrivateMessage(sendMsg)
 
 	time.Sleep(WaitToReplyTime)
 	msgText = "I wasn't just born, I was engineered specifically for @advenadiem. 😉"
 	secMsg := tgbotapi.NewMessage(ctx.Chat.ID, msgText)
 
-  go h.sendPrivateMessage(secMsg)
+	go h.sendPrivateMessage(secMsg)
 
 	time.Sleep(WaitToReplyTime)
 	msgText = "If you're in need of a bot for your group, just hit up @elicodes. He's got what you need. Wubba lubba dub dub! 🖕"
